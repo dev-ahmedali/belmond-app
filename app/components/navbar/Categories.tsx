@@ -33,7 +33,7 @@ const Categories = () => {
         flex 
         flex-row
         items-center
-        justify-center 
+        justify-between 
         overflow-x-auto
     ">
         {categories.map((item) => (
