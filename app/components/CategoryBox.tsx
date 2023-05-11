@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 import { IconType } from "react-icons";
-import qs from "query-string"
+import qs from "query-string";
 
 interface CategoryBoxProps {
   icon: IconType;
@@ -16,32 +16,36 @@ const CategoryBox: React.FC<CategoryBoxProps> = ({
   label,
   selected,
 }) => {
-    const router = useRouter()
-    const params = useSearchParams()
+  const router = useRouter();
+  const params = useSearchParams();
 
-    const handleClick = useCallback(() => {
-        let currentQuery = {}
+  const handleClick = useCallback(() => {
+    let currentQuery = {};
 
-        if(params) {
-            currentQuery = qs.parse(params.toString())
-        }
-        const updatedQuery: any = {
-            ...currentQuery,
-            category:label
-        }
-        if(params?.get('category') === label) {
-            delete updatedQuery.category
+    if (params) {
+      currentQuery = qs.parse(params.toString());
+    }
+    const updatedQuery: any = {
+      ...currentQuery,
+      category: label,
+    };
+    
+    if (params?.get("category") === label) {
+      delete updatedQuery.category;
+    }
+    const url = qs.stringifyUrl(
+      {
+        url: "/",
+        query: updatedQuery,
+      },
+      { skipNull: true },
+    );
 
-        }
-        const url = qs.stringifyUrl({
-            url: '/',
-            query: updatedQuery,
-        }, {skipNull: true})
-
-        router.push(url)
-    }, [])
+    router.push(url);
+  }, [label, params, router]);
   return (
     <div
+      onClick={handleClick}
       className={`flex flex-col items-center justify-center p-3 border-b-2 gap-2
   hover:text-neutral-800 transition cursor-pointer
   ${selected ? "border-b-neutral-800" : "border-transparent"}
