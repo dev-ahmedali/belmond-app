@@ -20,6 +20,12 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
   const toggleOpen = useCallback(() => {
     setIsOpen((value) => !value);
   }, []);
+
+  const onRent = useCallback(() => {
+    if(!currentUser) {
+      return loginModal.onOpen()
+    }
+  }, [])
   return (
     <div className="relative">
       <div className="flex flex-row items-center gap-3">
