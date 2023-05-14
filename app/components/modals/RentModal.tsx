@@ -9,6 +9,7 @@ import CategoryInput from "../inputs/CategoryInput";
 import { FieldValues, useForm } from "react-hook-form";
 import CountrySelect from "../inputs/CountrySelect";
 import dynamic from "next/dynamic";
+import Counter from "../inputs/Counter";
 
 
 enum STEPS {
@@ -121,6 +122,18 @@ const RentModal = () => {
         />
       </div>
     );
+  }
+
+  if(steps === STEPS.INFO) {
+    bodyContent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+        title="Share some basics about your place"
+        subtitle="What amenities do you have?"
+        />
+        <Counter/>
+      </div>
+    )
   }
   return (
     <Modal
