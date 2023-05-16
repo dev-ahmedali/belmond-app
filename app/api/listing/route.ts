@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import prisma from "@/app/libs/prismadb";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 
-export async function POST(request: Request) {
+export async function POST(
+  request: Request, 
+) {
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
@@ -10,18 +12,17 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
-
-  const {
+  const { 
     title,
     description,
     imageSrc,
     category,
     roomCount,
-    guestCount,
     bathroomCount,
+    guestCount,
     location,
     price,
-  } = body;
+   } = body;
 
   Object.keys(body).forEach((value: any) => {
     if (!body[value]) {
@@ -31,18 +32,18 @@ export async function POST(request: Request) {
 
   const listing = await prisma.listing.create({
     data: {
-        title,
-        description,
-        imageSrc,
-        category,
-        roomCount,
-        guestCount,
-        bathroomCount,
-        locationValue: location.value,
-        price: parseInt(price, 10),
-        userId: currentUser.id
+      title,
+      description,
+      imageSrc,
+      category,
+      roomCount,
+      bathroomCount,
+      guestCount,
+      locationValue: location.value,
+      price: parseInt(price, 10),
+      userId: currentUser.id
     }
-  })
+  });
 
   return NextResponse.json(listing);
 }
