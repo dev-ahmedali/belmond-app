@@ -6,11 +6,12 @@ import { useMemo, useState } from "react";
 import Heading from "../Heading";
 import { categories } from "../navbar/Categories";
 import CategoryInput from "../inputs/CategoryInput";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import CountrySelect from "../inputs/CountrySelect";
 import dynamic from "next/dynamic";
 import Counter from "../inputs/Counter";
 import ImageUpload from "../inputs/ImageUpload";
+import Input from "../inputs/Input";
 
 enum STEPS {
   CATEGORY = 0,
@@ -23,6 +24,7 @@ enum STEPS {
 
 const RentModal = () => {
   const [steps, setSteps] = useState(STEPS.CATEGORY);
+  const [isLoading, setIsLoading] = useState(false);
   const rentModal = useRentModal();
 
   const {
@@ -30,7 +32,7 @@ const RentModal = () => {
     handleSubmit,
     setValue,
     watch,
-    formState: { error },
+    formState: { errors },
     reset,
   } = useForm<FieldValues>({
     defaultValues: {
@@ -51,7 +53,7 @@ const RentModal = () => {
   const guestCount = watch("guestCount");
   const roomCount = watch("roomCount");
   const bathroomCount = watch("bathroomCount");
-  const imageSrc = watch("imageSrc")
+  const imageSrc = watch("imageSrc");
 
   const Map = useMemo(
     () =>
@@ -76,6 +78,12 @@ const RentModal = () => {
   const onNext = () => {
     setSteps((value) => value + 1);
   };
+
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    if(steps !== STEPS.PRICE) {
+      
+    }
+  }
 
   const actionLabel = useMemo(() => {
     if (steps === STEPS.PRICE) {
@@ -169,8 +177,58 @@ const RentModal = () => {
           subtitle="Show guest what your place looks like!"
         />
         <ImageUpload
-        value={imageSrc}
-        onChange={(value) => setCustomValue('imageSrc', value)}/>
+          value={imageSrc}
+          onChange={(value) => setCustomValue("imageSrc", value)}
+        />
+      </div>
+    );
+  }
+
+  if (steps === STEPS.DESCRIPTION) {
+    bodyContent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="How would you describe your place?"
+          subtitle="Short and sweet works best!"
+        />
+        <Input
+          id="title"
+          label="Title"
+          disabled={isLoading}
+          register={register}
+          errors={errors}
+          required
+        />
+        <hr />
+        <Input
+          id="description"
+          label="Description"
+          disabled={isLoading}
+          register={register}
+          errors={errors}
+          required
+        />
+      </div>
+    );
+  }
+
+  if (steps === STEPS.PRICE) {
+    bodyContent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Now, set you price"
+          subtitle="How much do you charge per night?"
+        />
+        <Input
+          id="price"
+          label="Price"
+          formatePrice
+          type="number"
+          disabled={isLoading}
+          register={register}
+          errors={errors}
+          required
+        />
       </div>
     );
   }
