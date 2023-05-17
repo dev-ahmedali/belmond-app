@@ -64,6 +64,7 @@ const RentModal = () => {
       dynamic(() => import("../Map"), {
         ssr: false,
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [location],
   );
 
@@ -87,22 +88,24 @@ const RentModal = () => {
     if (steps !== STEPS.PRICE) {
       return onNext();
     }
+    
     setIsLoading(true);
-    axios.post("/api/listing", data).then(() => {
-      toast.success("Listing created!");
+
+    axios.post('/api/listings', data)
+    .then(() => {
+      toast.success('Listing created!');
       router.refresh();
       reset();
       setSteps(STEPS.CATEGORY)
-      rentModal.onClose()
+      rentModal.onClose();
     })
     .catch(() => {
-      toast.error("Something went wrong that")
-    }).finally(() => {
-      setIsLoading(false)
-    }) 
-
-    
-  };
+      toast.error('Something went wrong.');
+    })
+    .finally(() => {
+      setIsLoading(false);
+    })
+  }
 
   const actionLabel = useMemo(() => {
     if (steps === STEPS.PRICE) {
